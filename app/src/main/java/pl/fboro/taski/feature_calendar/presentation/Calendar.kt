@@ -16,15 +16,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import pl.fboro.taski.R
+import pl.fboro.taski.feature_calendar.presentation.CalendarGrid
+import pl.fboro.taski.feature_calendar.utils.MyDate
+import pl.fboro.taski.feature_calendar.utils.getCurrentDate
 
 @Composable
 fun Calendar() {
 
     val context: Context = LocalContext.current
     val months: Array<String> = context.resources.getStringArray(R.array.months)
-    val  (currentMonth, currentYear) = getCurrentMonthAndYear()
-    var month by remember{ mutableStateOf(currentMonth) }
-    var year by remember{ mutableStateOf(currentYear) }
+    val  currentDate = getCurrentDate()
+    var month by remember{ mutableStateOf(currentDate.month) }
+    var year by remember{ mutableStateOf(currentDate.year) }
+    var chosenDate by remember{mutableStateOf(MyDate(currentDate.day,
+        currentDate.month, currentDate.year, null, null))}
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -68,6 +73,8 @@ fun Calendar() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        CalendarGrid(month = month, year = year)
+        CalendarGrid(month = month, year = year, currentDate = currentDate, chosenDate = chosenDate) {
+            chosenDate = it
+        }
     }
 }

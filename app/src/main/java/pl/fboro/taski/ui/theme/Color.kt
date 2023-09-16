@@ -8,3 +8,5 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
 val Background = Color(0xFFA3B070)
+val ChosenDayBoxBackground = Color(0xFFC4C48C)
+val AddTaskButton = Color(0xFFB4C180)

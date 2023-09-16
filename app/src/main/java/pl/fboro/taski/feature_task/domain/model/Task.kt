@@ -2,20 +2,17 @@ package pl.fboro.taski.feature_task.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import pl.fboro.taski.feature_calendar.utils.MyDate
 
 @Entity
 class Task(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     val title: String,
     val description: String,
-    val day: Int,
-    val month: Int,
-    val year: Int,
-    val hour: Int,
-    val minute: Int,
-    val reminder1: Int,
-    val reminder2: Int,
-    val reminder3: Int,
-    val isDone: Boolean
+    val isDone: Boolean,
+    val dueDate: MyDate,
+    val reminderDate1: MyDate,
+    val reminderDate2: MyDate,
+    val reminderDate3: MyDate,
 )
