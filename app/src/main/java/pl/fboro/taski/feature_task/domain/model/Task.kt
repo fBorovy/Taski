@@ -12,7 +12,7 @@ class Task(
     val description: String,
     val isDone: Boolean,
     val dueDate: MyDate,
-    val reminderDate1: MyDate,
-    val reminderDate2: MyDate,
-    val reminderDate3: MyDate,
+    val reminderDate1: MyDate?,
+    val reminderDate2: MyDate?,
+    val reminderDate3: MyDate?,
 )

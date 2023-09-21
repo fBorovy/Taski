@@ -1,4 +1,4 @@
-package pl.fboro.taski.feature_calendar
+package pl.fboro.taski.feature_calendar.presentation
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import pl.fboro.taski.R
-import pl.fboro.taski.feature_calendar.presentation.CalendarGrid
 import pl.fboro.taski.feature_calendar.utils.MyDate
 import pl.fboro.taski.feature_calendar.utils.getCurrentDate
 
