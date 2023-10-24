@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -14,7 +15,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import pl.fboro.taski.R
-import pl.fboro.taski.ui.theme.Background
+import pl.fboro.taski.ui.theme.BackgroundColor
+import pl.fboro.taski.ui.theme.Typography
 
 
 @Composable
@@ -25,11 +27,13 @@ fun AddTaskScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(brush = Brush.verticalGradient(
-                colors = listOf(Color.White, Background),
+                colors = listOf(Color.White, BackgroundColor),
                 startY = -100f
             ))
             .padding(top = 20.dp)
+            .padding(horizontal = 15.dp)
     ) {
+
         var taskTitle by remember{ mutableStateOf("") }
         var taskDescription by remember{ mutableStateOf("") }
 
@@ -42,7 +46,6 @@ fun AddTaskScreen(navController: NavController) {
         ){
             taskTitle = it
         }
-
         TransparentTextField(
             value = taskDescription,
             placeholder = context.resources.getString(R.string.description_placeholder),
@@ -51,6 +54,13 @@ fun AddTaskScreen(navController: NavController) {
         ){
             taskDescription = it
         }
+
+        Text(
+            modifier = Modifier.padding(start = 15.dp, top = 10.dp),
+            text = context.resources.getString(R.string.deadline),
+            style = Typography.body2
+        )
+
     }
 
 }

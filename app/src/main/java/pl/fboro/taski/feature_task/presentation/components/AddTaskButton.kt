@@ -23,7 +23,7 @@ fun AddTaskButton() {
             modifier = Modifier
                 .size(60.dp)
                 .clip(shape = RoundedCornerShape(60.dp, 0.dp, 0.dp, 60.dp))
-                .background(pl.fboro.taski.ui.theme.AddTaskButton)
+                .background(pl.fboro.taski.ui.theme.AddTaskButtonColor)
                 .align(Alignment.CenterEnd)
                 .clickable {
                     //navController.navigate()

@@ -17,15 +17,21 @@ interface TaskDao {
     @Delete
     suspend fun delete(task: Task)
 
-    @Query("SELECT * FROM Task WHERE isDone is TRUE ORDER BY dueDate")
+    @Query("SELECT * FROM Task WHERE isDone IS TRUE ORDER BY dueDate")
     fun getAllDoneTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task WHERE isDone is False ORDER BY dueDate")
+    @Query("SELECT * FROM Task WHERE isDone IS False ORDER BY dueDate")
     fun getAllUndoneTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task ORDER BY dueDate")
+    @Query("SELECT * FROM Task ORDER BY dueDate ORDER BY dueDate")
     fun getAllTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task WHERE dueDate = :dueDate")
+    @Query("SELECT * FROM Task WHERE dueDate = :dueDate ORDER BY dueDate")
     fun getSpecifiedDayAllActivities(dueDate: MyDate): Flow<List<Task>>
+
+    @Query("SELECT * FROM Task WHERE dueDate = :dueDate AND isDone IS TRUE ORDER BY dueDate")
+    fun getSpecifiedDayDoneTask(dueDate: MyDate): Flow<List<Task>>
+
+    @Query("SELECT * FROM Task WHERE dueDate = :dueDate AND isDone IS FALSE ORDER BY dueDate")
+    fun getSpecifiedDayUndoneTask(dueDate: MyDate): Flow<List<Task>>
 }

@@ -18,8 +18,8 @@ import androidx.navigation.NavController
 import pl.fboro.taski.feature_calendar.presentation.Calendar
 import pl.fboro.taski.feature_task.presentation.TasksContent
 import pl.fboro.taski.ui.TopPanel
-import pl.fboro.taski.ui.theme.AddTaskButton
-import pl.fboro.taski.ui.theme.Background
+import pl.fboro.taski.ui.theme.AddTaskButtonColor
+import pl.fboro.taski.ui.theme.BackgroundColor
 
 @Composable
 fun MainScreen(navController: NavController) {
@@ -27,7 +27,7 @@ fun MainScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(brush = Brush.verticalGradient(
-                colors = listOf(Color.White, Background),
+                colors = listOf(Color.White, BackgroundColor),
                 startY = -100f
             ))
             .padding(top = 20.dp)
@@ -36,7 +36,7 @@ fun MainScreen(navController: NavController) {
             modifier = Modifier
                 .size(60.dp)
                 .clip(shape = RoundedCornerShape(60.dp, 0.dp, 0.dp, 60.dp))
-                .background(AddTaskButton)
+                .background(AddTaskButtonColor)
                 .align(Alignment.CenterEnd)
                 .clickable {
                     navController.navigate(Screen.AddTaskScreen.name)
@@ -52,10 +52,7 @@ fun MainScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 15.dp)
-        )
-
-
-        {
+        ) {
             TopPanel()
             Calendar()
             TasksContent()

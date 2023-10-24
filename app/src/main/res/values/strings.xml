@@ -34,4 +34,5 @@
     <string name="current_date_indicator">Current date indicator</string>
     <string name="title_placeholder">Tytuł</string>
     <string name="description_placeholder">Opis</string>
+    <string name="deadline">Termin</string>
 </resources>

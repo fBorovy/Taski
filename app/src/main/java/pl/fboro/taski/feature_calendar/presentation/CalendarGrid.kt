@@ -19,7 +19,7 @@ import pl.fboro.taski.feature_calendar.DrawLines
 import pl.fboro.taski.feature_calendar.countMonthDaysAmount
 import pl.fboro.taski.feature_calendar.getStartingDay
 import pl.fboro.taski.feature_calendar.utils.MyDate
-import pl.fboro.taski.ui.theme.ChosenDayBoxBackground
+import pl.fboro.taski.ui.theme.ChosenDayBoxBackgroundColor
 
 @Composable
 fun CalendarGrid(
@@ -40,6 +40,7 @@ fun CalendarGrid(
     val sDay = startingDay
     var currentMonthDay = 1
     var nextMonthDay = 1
+    var redundantSign = false
 
 
     Box(modifier = Modifier.fillMaxWidth()) {
@@ -62,7 +63,7 @@ fun CalendarGrid(
                                         j > 0 && i in 1..7 &&
                                         startingDay == -1
                                     )
-                                        ChosenDayBoxBackground
+                                        ChosenDayBoxBackgroundColor
                                     else Color.Transparent
                                 )
                                 .clickable{
@@ -107,14 +108,15 @@ fun CalendarGrid(
 
                             if (currentMonthDay == currentDate.day + 1 &&
                                 month == currentDate.month &&
-                                year == currentDate.year) {
+                                year == currentDate.year && !redundantSign
+                            ) {
                                 Image(
                                     modifier = Modifier.align(Alignment.Center),
                                     painter = painterResource(id = R.drawable.circle),
                                     contentDescription = context.resources.getString(R.string.current_date_indicator),
                                 )
+                                redundantSign = true
                             }
-
                             DrawLines(j, i)
                         }
                     }

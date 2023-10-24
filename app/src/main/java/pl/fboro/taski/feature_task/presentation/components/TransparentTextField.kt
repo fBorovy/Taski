@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import pl.fboro.taski.ui.theme.Typography
 
 @Composable
 fun TransparentTextField(
@@ -34,6 +35,7 @@ fun TransparentTextField(
             keyboardType = KeyboardType.Number,
             imeAction = imeAction,
         ),
-        placeholder = { Text(text = placeholder)}
+        placeholder = { Text(text = placeholder) },
+        textStyle = Typography.body2,
     )
 }
