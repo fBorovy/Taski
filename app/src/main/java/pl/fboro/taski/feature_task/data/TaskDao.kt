@@ -23,7 +23,7 @@ interface TaskDao {
     @Query("SELECT * FROM Task WHERE isDone IS False ORDER BY dueDate")
     fun getAllUndoneTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task ORDER BY dueDate ORDER BY dueDate")
+    @Query("SELECT * FROM Task ORDER BY dueDate")
     fun getAllTasks(): Flow<List<Task>>
 
     @Query("SELECT * FROM Task WHERE dueDate = :dueDate ORDER BY dueDate")

@@ -4,10 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import pl.fboro.taski.feature_task.data.TaskState
 import pl.fboro.taski.feature_task.presentation.components.AddTaskScreen
 
 @Composable
-fun Navigation() {
+fun Navigation(state: TaskState) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screen.MainScreen.name) {
