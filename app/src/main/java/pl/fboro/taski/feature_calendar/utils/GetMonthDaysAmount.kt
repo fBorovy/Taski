@@ -1,4 +1,4 @@
-package pl.fboro.taski.feature_calendar
+package pl.fboro.taski.feature_calendar.utils
 
 fun countMonthDaysAmount(month: Int, year: Int): Int {
     when (month) {

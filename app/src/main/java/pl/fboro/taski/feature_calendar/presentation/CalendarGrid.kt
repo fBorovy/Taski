@@ -6,7 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,18 +16,20 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import pl.fboro.taski.R
 import pl.fboro.taski.feature_calendar.DrawLines
-import pl.fboro.taski.feature_calendar.countMonthDaysAmount
 import pl.fboro.taski.feature_calendar.getStartingDay
-import pl.fboro.taski.feature_calendar.utils.MyDate
+import pl.fboro.taski.feature_calendar.utils.countMonthDaysAmount
+import pl.fboro.taski.feature_task.data.PresentationMode
+import pl.fboro.taski.feature_task.data.TaskEvent
+import pl.fboro.taski.feature_task.data.TaskState
 import pl.fboro.taski.ui.theme.ChosenDayBoxBackgroundColor
 
 @Composable
 fun CalendarGrid(
     month: Int,
     year: Int,
-    currentDate: MyDate,
-    chosenDate: MyDate,
-    changeChosenDate: (MyDate) -> Unit,
+    currentDate: List<Int>,
+    state: TaskState,
+    onEvent: (TaskEvent) -> Unit,
 ) {
 
     val context: Context = LocalContext.current
@@ -41,6 +43,7 @@ fun CalendarGrid(
     var currentMonthDay = 1
     var nextMonthDay = 1
     var redundantSign = false
+    var chosenDate by remember { mutableStateOf(listOf(0,0,0)) }
 
 
     Box(modifier = Modifier.fillMaxWidth()) {
@@ -57,9 +60,9 @@ fun CalendarGrid(
                                 .weight(1f)
                                 .background(
                                     if (currentMonthDay <= monthDaysAmount &&
-                                        currentMonthDay == chosenDate.day &&
-                                        month == chosenDate.month &&
-                                        year == chosenDate.year &&
+                                        currentMonthDay == chosenDate[0] &&
+                                        month == chosenDate[1] &&
+                                        year == chosenDate[2] &&
                                         j > 0 && i in 1..7 &&
                                         startingDay == -1
                                     )
@@ -70,7 +73,33 @@ fun CalendarGrid(
                                     if ( j > 0 && i in 1..7)
                                     {
                                         val clickedDay = (j-1) * 7 + (i-1) - sDay
-                                        changeChosenDate(MyDate(clickedDay, month, year, null, null))
+                                        val newDate = listOf(clickedDay, month, year)
+                                        if (clickedDay > monthDaysAmount || clickedDay < 1 || newDate == chosenDate) {
+                                            chosenDate = listOf(0,0,0)
+                                            onEvent(TaskEvent.ChangePresentationMode(
+                                                when (state.selectedPresentationMode) {
+                                                    PresentationMode.SHOW_ALL -> PresentationMode.SHOW_ALL
+                                                    PresentationMode.SHOW_DONE -> PresentationMode.SHOW_DONE
+                                                    PresentationMode.SHOW_UNDONE -> PresentationMode.SHOW_UNDONE
+                                                    PresentationMode.SHOW_ALL_SPECIFIED_DATE -> PresentationMode.SHOW_ALL
+                                                    PresentationMode.SHOW_DONE_SPECIFIED_DATE -> PresentationMode.SHOW_DONE
+                                                    PresentationMode.SHOW_UNDONE_SPECIFIED_DATE -> PresentationMode.SHOW_UNDONE
+                                                }
+                                            ))
+                                        } else {
+                                            chosenDate = newDate
+                                            onEvent(TaskEvent.ChangePresentationDate(clickedDay, month, year))
+                                            onEvent(TaskEvent.ChangePresentationMode(
+                                                when (state.selectedPresentationMode) {
+                                                PresentationMode.SHOW_ALL -> PresentationMode.SHOW_ALL_SPECIFIED_DATE
+                                                PresentationMode.SHOW_DONE -> PresentationMode.SHOW_DONE_SPECIFIED_DATE
+                                                PresentationMode.SHOW_UNDONE -> PresentationMode.SHOW_UNDONE_SPECIFIED_DATE
+                                                PresentationMode.SHOW_ALL_SPECIFIED_DATE -> PresentationMode.SHOW_ALL_SPECIFIED_DATE
+                                                PresentationMode.SHOW_DONE_SPECIFIED_DATE -> PresentationMode.SHOW_DONE_SPECIFIED_DATE
+                                                PresentationMode.SHOW_UNDONE_SPECIFIED_DATE -> PresentationMode.SHOW_UNDONE_SPECIFIED_DATE
+                                                }
+                                            ))
+                                        }
                                     }
                                 }
                         ) {
@@ -106,9 +135,9 @@ fun CalendarGrid(
                                 }
                             }
 
-                            if (currentMonthDay == currentDate.day + 1 &&
-                                month == currentDate.month &&
-                                year == currentDate.year && !redundantSign
+                            if (currentMonthDay == currentDate[0] + 1 &&
+                                month == currentDate[1] &&
+                                year == currentDate[2] && !redundantSign
                             ) {
                                 Image(
                                     modifier = Modifier.align(Alignment.Center),

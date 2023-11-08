@@ -5,11 +5,13 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import pl.fboro.taski.feature_calendar.utils.MyDate
 import pl.fboro.taski.feature_task.domain.model.Task
 
 @Dao
 interface TaskDao {
+
+    @Query("DELETE FROM sqlite_sequence")
+    fun clearPrimaryKeyIndex()
 
     @Upsert
     suspend fun upsertTask(task: Task)
@@ -17,21 +19,21 @@ interface TaskDao {
     @Delete
     suspend fun delete(task: Task)
 
-    @Query("SELECT * FROM Task WHERE isDone IS TRUE ORDER BY dueDate")
+    @Query("SELECT * FROM Task WHERE (isDone IS 1) ORDER BY dueDateYear, dueDateMonth, dueDateDay, dueDateHour, dueDateMinute")
     fun getAllDoneTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task WHERE isDone IS False ORDER BY dueDate")
+    @Query("SELECT * FROM Task WHERE (isDone IS 0) ORDER BY dueDateYear, dueDateMonth, dueDateDay, dueDateHour, dueDateMinute")
     fun getAllUndoneTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task ORDER BY dueDate")
+    @Query("SELECT * FROM Task ORDER BY dueDateYear, dueDateMonth, dueDateDay, dueDateHour, dueDateMinute")
     fun getAllTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task WHERE dueDate = :dueDate ORDER BY dueDate")
-    fun getSpecifiedDayAllActivities(dueDate: MyDate): Flow<List<Task>>
+    @Query("SELECT * FROM Task WHERE dueDateDay = :day AND dueDateMonth = :month AND dueDateYear = :year ORDER BY dueDateYear, dueDateMonth, dueDateDay, dueDateHour, dueDateMinute")
+    fun getSpecifiedDayAllTasks(day: Int, month: Int, year:Int): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task WHERE dueDate = :dueDate AND isDone IS TRUE ORDER BY dueDate")
-    fun getSpecifiedDayDoneTask(dueDate: MyDate): Flow<List<Task>>
+    @Query("SELECT * FROM Task WHERE dueDateDay = :day AND dueDateMonth = :month AND dueDateYear = :year AND (isDone IS 1) ORDER BY dueDateYear, dueDateMonth, dueDateDay, dueDateHour, dueDateMinute")
+    fun getSpecifiedDayDoneTask(day: Int, month: Int, year:Int): Flow<List<Task>>
 
-    @Query("SELECT * FROM Task WHERE dueDate = :dueDate AND isDone IS FALSE ORDER BY dueDate")
-    fun getSpecifiedDayUndoneTask(dueDate: MyDate): Flow<List<Task>>
+    @Query("SELECT * FROM Task WHERE dueDateDay = :day AND dueDateMonth = :month AND dueDateYear = :year AND (isDone IS 0) ORDER BY dueDateYear, dueDateMonth, dueDateDay, dueDateHour, dueDateMinute")
+    fun getSpecifiedDayUndoneTask(day: Int, month: Int, year:Int): Flow<List<Task>>
 }

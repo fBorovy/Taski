@@ -16,19 +16,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import pl.fboro.taski.R
-import pl.fboro.taski.feature_calendar.utils.MyDate
 import pl.fboro.taski.feature_calendar.utils.getCurrentDate
+import pl.fboro.taski.feature_task.data.TaskEvent
+import pl.fboro.taski.feature_task.data.TaskState
 
 @Composable
-fun Calendar() {
+fun Calendar(
+    state: TaskState,
+    onEvent: (TaskEvent) -> Unit,
+) {
 
     val context: Context = LocalContext.current
     val months: Array<String> = context.resources.getStringArray(R.array.months)
-    val  currentDate = getCurrentDate()
-    var month by remember{ mutableStateOf(currentDate.month) }
-    var year by remember{ mutableStateOf(currentDate.year) }
-    var chosenDate by remember{mutableStateOf(MyDate(currentDate.day,
-        currentDate.month, currentDate.year, null, null))}
+    val currentDate = getCurrentDate()
+    var month by remember{ mutableStateOf(currentDate[1]) }
+    var year by remember{ mutableStateOf(currentDate[2]) }
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -52,7 +54,7 @@ fun Calendar() {
             }
             Text(
                 text = "   " + months[month] + " " + year + "   ",
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.h1
             )
             Box(
                 modifier = Modifier
@@ -72,8 +74,6 @@ fun Calendar() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        CalendarGrid(month = month, year = year, currentDate = currentDate, chosenDate = chosenDate) {
-            chosenDate = it
-        }
+        CalendarGrid(month = month, year = year, currentDate = currentDate, state, onEvent)
     }
 }

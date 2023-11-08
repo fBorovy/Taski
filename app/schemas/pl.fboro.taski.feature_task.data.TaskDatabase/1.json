@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7c2913b57d45da1f49dab0789f32c7fc",
+    "identityHash": "170f81bd998dcad7420200299049385c",
     "entities": [
       {
         "tableName": "Task",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `isDone` INTEGER NOT NULL, `dueDate` TEXT NOT NULL, `reminderDate1` TEXT, `reminderDate2` TEXT, `reminderDate3` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `isDone` INTEGER NOT NULL, `dueDateDay` INTEGER NOT NULL, `dueDateMonth` INTEGER NOT NULL, `dueDateYear` INTEGER NOT NULL, `dueDateHour` INTEGER NOT NULL, `dueDateMinute` INTEGER NOT NULL, `reminder1Day` INTEGER, `reminder1Month` INTEGER, `reminder1Year` INTEGER, `reminder1Hour` INTEGER, `reminder1Minute` INTEGER, `reminder2Day` INTEGER, `reminder2Month` INTEGER, `reminder2Year` INTEGER, `reminder2Hour` INTEGER, `reminder2Minute` INTEGER, `reminder3Day` INTEGER, `reminder3Month` INTEGER, `reminder3Year` INTEGER, `reminder3Hour` INTEGER, `reminder3Minute` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -33,27 +33,123 @@
             "notNull": true
           },
           {
-            "fieldPath": "dueDate",
-            "columnName": "dueDate",
-            "affinity": "TEXT",
+            "fieldPath": "dueDateDay",
+            "columnName": "dueDateDay",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "reminderDate1",
-            "columnName": "reminderDate1",
-            "affinity": "TEXT",
+            "fieldPath": "dueDateMonth",
+            "columnName": "dueDateMonth",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dueDateYear",
+            "columnName": "dueDateYear",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dueDateHour",
+            "columnName": "dueDateHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dueDateMinute",
+            "columnName": "dueDateMinute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reminder1Day",
+            "columnName": "reminder1Day",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "reminderDate2",
-            "columnName": "reminderDate2",
-            "affinity": "TEXT",
+            "fieldPath": "reminder1Month",
+            "columnName": "reminder1Month",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "reminderDate3",
-            "columnName": "reminderDate3",
-            "affinity": "TEXT",
+            "fieldPath": "reminder1Year",
+            "columnName": "reminder1Year",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder1Hour",
+            "columnName": "reminder1Hour",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder1Minute",
+            "columnName": "reminder1Minute",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder2Day",
+            "columnName": "reminder2Day",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder2Month",
+            "columnName": "reminder2Month",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder2Year",
+            "columnName": "reminder2Year",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder2Hour",
+            "columnName": "reminder2Hour",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder2Minute",
+            "columnName": "reminder2Minute",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder3Day",
+            "columnName": "reminder3Day",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder3Month",
+            "columnName": "reminder3Month",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder3Year",
+            "columnName": "reminder3Year",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder3Hour",
+            "columnName": "reminder3Hour",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reminder3Minute",
+            "columnName": "reminder3Minute",
+            "affinity": "INTEGER",
             "notNull": false
           }
         ],
@@ -70,7 +166,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c2913b57d45da1f49dab0789f32c7fc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '170f81bd998dcad7420200299049385c')"
     ]
   }
 }

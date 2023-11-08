@@ -13,6 +13,7 @@ import pl.fboro.taski.feature_task.data.TaskDatabase
 import pl.fboro.taski.feature_task.presentation.TaskViewModel
 import pl.fboro.taski.ui.theme.TaskiTheme
 
+@Suppress("UNCHECKED_CAST")
 class MainActivity : ComponentActivity() {
 
     private val db by lazy {
@@ -38,7 +39,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskiTheme {
                 val state by viewModel.state.collectAsState()
-                Navigation(state)
+                Navigation(state, viewModel::onEvent)
             }
         }
     }
