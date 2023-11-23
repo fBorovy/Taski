@@ -32,7 +32,7 @@ fun TransparentTextField(
         },
         singleLine = singleLine,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
+            keyboardType = KeyboardType.Text,
             imeAction = imeAction,
         ),
         placeholder = { Text(text = placeholder) },

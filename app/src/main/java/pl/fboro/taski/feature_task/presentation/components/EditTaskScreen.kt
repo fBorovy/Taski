@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,51 +28,47 @@ import pl.fboro.taski.feature_calendar.utils.currentMonth
 import pl.fboro.taski.feature_calendar.utils.currentYear
 import pl.fboro.taski.feature_calendar.utils.getMonthDaysAmount
 import pl.fboro.taski.feature_task.data.TaskEvent
-import pl.fboro.taski.ui.theme.AddTaskButtonColor
-import pl.fboro.taski.ui.theme.AddTaskScreenLabelColor
-import pl.fboro.taski.ui.theme.BackgroundColor
-import pl.fboro.taski.ui.theme.Typography
-
+import pl.fboro.taski.feature_task.utils.*
+import pl.fboro.taski.ui.theme.*
 
 @Composable
-fun AddTaskScreen(
+fun EditTaskScreen(
     navController: NavController,
     onEvent: (TaskEvent) -> Unit,
 ) {
     val context: Context = LocalContext.current
-    var taskTitle by remember{ mutableStateOf("") }
-    var taskDescription by remember{ mutableStateOf("") }
+    var isDone by remember { mutableStateOf(editIsDone) }
+    var taskTitle by remember{ mutableStateOf(editTitle) }
+    var taskDescription by remember{ mutableStateOf(editDescription) }
 
-    var dueDateDay by remember { mutableStateOf(currentDay) }
-    var dueDateMonth by remember { mutableStateOf(currentMonth) }
-    var dueDateYear by remember { mutableStateOf(currentYear) }
-    var dueHour by remember { mutableStateOf(8) }
-    var dueMinute by remember { mutableStateOf( 0) }
+    var dueDateDay by remember { mutableStateOf(editDueDateDay) }
+    var dueDateMonth by remember { mutableStateOf(editDueDateMonth) }
+    var dueDateYear by remember { mutableStateOf(editDueDateYear) }
+    var dueHour by remember { mutableStateOf(editDueDateHour) }
+    var dueMinute by remember { mutableStateOf(editDueDateMinute) }
 
-    var showReminderDate1 by remember { mutableStateOf(false) }
-    var showReminderDate2 by remember { mutableStateOf(false) }
-    var showReminderDate3 by remember { mutableStateOf(false) }
+    var showReminderDate1 by remember { mutableStateOf(editReminder1Day != null) }
+    var showReminderDate2 by remember { mutableStateOf(editReminder2Day != null) }
+    var showReminderDate3 by remember { mutableStateOf(editReminder3Day != null) }
     var daysAmount = getMonthDaysAmount(dueDateMonth - 1, dueDateYear)
 
-    var reminder1Day by remember { mutableStateOf(currentDay) }
-    var reminder1Month by remember { mutableStateOf(currentMonth) }
-    var reminder1Year by remember { mutableStateOf(currentYear) }
-    var reminder1Hour by remember { mutableStateOf(8) }
-    var reminder1Minute by remember { mutableStateOf( 0) }
+    var reminder1Day by remember { mutableStateOf(editReminder1Day ?: currentDay) }
+    var reminder1Month by remember { mutableStateOf(editReminder1Month ?: currentMonth) }
+    var reminder1Year by remember { mutableStateOf(editReminder1Year ?: currentYear) }
+    var reminder1Hour by remember { mutableStateOf(editReminder1Hour?: 8) }
+    var reminder1Minute by remember { mutableStateOf( editReminder1Minute ?: 0) }
 
-    var reminder2Day by remember { mutableStateOf(currentDay) }
-    var reminder2Month by remember { mutableStateOf(currentMonth) }
-    var reminder2Year by remember { mutableStateOf(currentYear) }
-    var reminder2Hour by remember { mutableStateOf(8) }
-    var reminder2Minute by remember { mutableStateOf( 0) }
+    var reminder2Day by remember { mutableStateOf(editReminder2Day ?: currentDay) }
+    var reminder2Month by remember { mutableStateOf(editReminder2Month ?: currentMonth) }
+    var reminder2Year by remember { mutableStateOf(editReminder2Year ?: currentYear) }
+    var reminder2Hour by remember { mutableStateOf(editReminder2Hour?: 8) }
+    var reminder2Minute by remember { mutableStateOf( editReminder2Minute ?: 0) }
 
-    var reminder3Day by remember { mutableStateOf(currentDay) }
-    var reminder3Month by remember { mutableStateOf(currentMonth) }
-    var reminder3Year by remember { mutableStateOf(currentYear) }
-    var reminder3Hour by remember { mutableStateOf(8) }
-    var reminder3Minute by remember { mutableStateOf(0) }
-
-
+    var reminder3Day by remember { mutableStateOf(editReminder3Day ?: currentDay) }
+    var reminder3Month by remember { mutableStateOf(editReminder3Month ?: currentMonth) }
+    var reminder3Year by remember { mutableStateOf(editReminder3Year ?: currentYear) }
+    var reminder3Hour by remember { mutableStateOf(editReminder3Hour?: 8) }
+    var reminder3Minute by remember { mutableStateOf( editReminder3Minute ?: 0) }
 
     Box(
         modifier = Modifier
@@ -81,7 +78,8 @@ fun AddTaskScreen(
                 startY = -100f
             ))
             .padding(top = 20.dp)
-    ){
+    ) {
+
         Box(
             modifier = Modifier
                 .size(60.dp)
@@ -97,6 +95,7 @@ fun AddTaskScreen(
                     onEvent(TaskEvent.SetDueDateYear(dueDateYear))
                     onEvent(TaskEvent.SetDueDateHour(dueHour))
                     onEvent(TaskEvent.SetDueDateMinute(dueMinute))
+                    onEvent(TaskEvent.SetCompletionStatus(isDone))
                     if (showReminderDate1) {
                         onEvent(TaskEvent.SetReminder1Day(reminder1Day))
                         onEvent(TaskEvent.SetReminder1Month(reminder1Month))
@@ -118,7 +117,7 @@ fun AddTaskScreen(
                         onEvent(TaskEvent.SetReminder3Hour(reminder3Hour))
                         onEvent(TaskEvent.SetReminder3Minute(reminder3Minute))
                     }
-                    onEvent(TaskEvent.SaveTask)
+                    onEvent(TaskEvent.EditTask(editTaskId))
                     navController.popBackStack()
                 },
         ) {
@@ -126,32 +125,45 @@ fun AddTaskScreen(
                 modifier = Modifier
                     .fillMaxSize(),
                 painter = painterResource(id = R.drawable.ic_baseline_save_30),
-                contentDescription = stringResource(id = R.string.add_task)
+                contentDescription = stringResource(id = R.string.add_task),
             )
         }
 
-        Column(
+        Box(
             modifier = Modifier
-                .padding(horizontal = 15.dp)
+                .size(60.dp)
+                .clip(shape = RoundedCornerShape(60.dp, 0.dp, 0.dp, 60.dp))
+                .background(AddTaskButtonColor)
+                .align(Alignment.BottomEnd)
+                .padding(11.dp)
+                .clickable {
+                    isDone = !isDone
+                },
         ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxSize(),
+                painter = painterResource(id = R.drawable.ic_baseline_done_30),
+                contentDescription = stringResource(id = R.string.add_task),
+                colorFilter = ColorFilter.tint(if (isDone) TaskDone else TaskUndone)
+            )
+        }
 
-            TransparentTextField(
-                value = taskTitle,
-                placeholder = context.resources.getString(R.string.title_placeholder),
+        Column {
+            TransparentTextField(value = taskTitle,
+                placeholder = taskTitle,
                 singleLine = true,
-                imeAction = ImeAction.Next,
+                imeAction = ImeAction.Next
             ){
                 taskTitle = it
             }
-            TransparentTextField(
-                value = taskDescription,
-                placeholder = context.resources.getString(R.string.description_placeholder),
+            TransparentTextField(value = taskDescription,
+                placeholder = taskDescription,
                 singleLine = false,
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Done
             ){
                 taskDescription = it
             }
-
             Text(
                 modifier = Modifier.padding(start = 15.dp, top = 10.dp),
                 text = context.resources.getString(R.string.deadline),

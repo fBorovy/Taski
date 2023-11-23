@@ -15,7 +15,7 @@ import pl.fboro.taski.feature_calendar.presentation.Calendar
 import pl.fboro.taski.feature_task.data.TaskEvent
 import pl.fboro.taski.feature_task.data.TaskState
 import pl.fboro.taski.feature_task.presentation.components.AddTaskButton
-import pl.fboro.taski.feature_task.presentation.task.TasksContent
+import pl.fboro.taski.feature_task.presentation.components.TasksContent
 import pl.fboro.taski.ui.TopPanel
 import pl.fboro.taski.ui.theme.BackgroundColor
 
@@ -44,7 +44,7 @@ fun MainScreen(
         ) {
             TopPanel()
             Calendar(state, onEvent)
-            TasksContent(state, onEvent)
+            TasksContent(state, navController, onEvent)
         }
     }
 }

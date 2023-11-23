@@ -1,6 +1,6 @@
 package pl.fboro.taski.feature_calendar.utils
 
-fun countMonthDaysAmount(month: Int, year: Int): Int {
+fun getMonthDaysAmount(month: Int, year: Int): Int {
     when (month) {
         0 -> return 31
         1 -> return if (year%4 == 0) 29 else 28

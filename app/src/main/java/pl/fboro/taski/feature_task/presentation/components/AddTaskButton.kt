@@ -31,7 +31,7 @@ fun AddTaskButton(
                 .background(AddTaskButtonColor)
                 .align(Alignment.CenterEnd)
                 .clickable {
-                    navController.navigate(Screen.AddTaskScreen.name)
+                    navController.navigate(Screen.AddTaskScreen.route)
                 },
         ) {
             Image(

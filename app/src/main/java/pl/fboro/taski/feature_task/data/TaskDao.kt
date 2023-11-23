@@ -36,4 +36,7 @@ interface TaskDao {
 
     @Query("SELECT * FROM Task WHERE dueDateDay = :day AND dueDateMonth = :month AND dueDateYear = :year AND (isDone IS 0) ORDER BY dueDateYear, dueDateMonth, dueDateDay, dueDateHour, dueDateMinute")
     fun getSpecifiedDayUndoneTask(day: Int, month: Int, year:Int): Flow<List<Task>>
+
+    @Query("Select * FROM Task WHERE id = :taskId")
+    suspend fun getTaskById(taskId: Int): Task?
 }

@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import pl.fboro.taski.R
 import pl.fboro.taski.feature_calendar.DrawLines
 import pl.fboro.taski.feature_calendar.getStartingDay
-import pl.fboro.taski.feature_calendar.utils.countMonthDaysAmount
+import pl.fboro.taski.feature_calendar.utils.getMonthDaysAmount
 import pl.fboro.taski.feature_task.data.PresentationMode
 import pl.fboro.taski.feature_task.data.TaskEvent
 import pl.fboro.taski.feature_task.data.TaskState
@@ -36,8 +36,8 @@ fun CalendarGrid(
     val days: Array<String> = context.resources.getStringArray(R.array.days)
     val boxSize: Dp = 35.dp
     val previousMonth: Int = if (month > 0) month - 1 else 11
-    val previousMonthDaysAmount = countMonthDaysAmount(previousMonth, year)
-    val monthDaysAmount = countMonthDaysAmount(month, year)
+    val previousMonthDaysAmount = getMonthDaysAmount(previousMonth, year)
+    val monthDaysAmount = getMonthDaysAmount(month, year)
     var startingDay = getStartingDay(month, year) - 1
     val sDay = startingDay
     var currentMonthDay = 1
@@ -88,6 +88,8 @@ fun CalendarGrid(
                                             ))
                                         } else {
                                             chosenDate = newDate
+                                            // ta linijka jest potrzebna do aktualizacji daty wyświetlania, bo gdy zmienia się presentation mode na ten sam, tylko z inną datą, stan się nie aktualizuje
+                                            onEvent(TaskEvent.ChangePresentationMode(PresentationMode.SHOW_ALL))
                                             onEvent(TaskEvent.ChangePresentationDate(clickedDay, month, year))
                                             onEvent(TaskEvent.ChangePresentationMode(
                                                 when (state.selectedPresentationMode) {

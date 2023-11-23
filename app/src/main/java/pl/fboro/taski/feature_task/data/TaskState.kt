@@ -29,4 +29,5 @@ data class TaskState(
     val reminder3Minute: Int? = null,
     val selectedPresentationMode: PresentationMode = PresentationMode.SHOW_ALL,
     val selectedDueDate: List<Int> = listOf(0,0,0),
+    val taskId: Int = 0,
 )

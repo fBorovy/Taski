@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import pl.fboro.taski.feature_calendar.utils.currentDay
 import pl.fboro.taski.feature_calendar.utils.currentMonth
 import pl.fboro.taski.feature_calendar.utils.currentYear
 import pl.fboro.taski.feature_task.data.PresentationMode
@@ -19,7 +18,7 @@ class TaskViewModel(
 ): ViewModel() {
 
     private val _presentationMode = MutableStateFlow(PresentationMode.SHOW_ALL)
-    private val _selectedDueDate = MutableStateFlow(listOf(currentDay, currentMonth, currentYear))
+    private val _selectedDueDate = MutableStateFlow(listOf(0, currentMonth, currentYear))
     private val _tasks = _presentationMode
         .flatMapLatest { presentationMode ->
             when(presentationMode) {
@@ -47,6 +46,11 @@ class TaskViewModel(
 
     fun onEvent(event: TaskEvent) {
         when(event) {
+            is TaskEvent.SetId -> {
+                _state.update { it.copy(
+                    taskId = event.id
+                ) }
+            }
             is TaskEvent.SetTitle -> {
                 _state.update { it.copy(
                     title = event.title
@@ -122,36 +126,38 @@ class TaskViewModel(
                     reminder3Hour = r3Hour,
                     reminder3Minute = r3Minute,
 
-                )
+                    )
                 viewModelScope.launch {
                     dao.upsertTask(task)
                 }
 
-                _state.update { it.copy(
-                    title = "",
-                    description = "",
-                    isDone = false,
-                    dueDateDay = 0,
-                    dueDateMonth = 0,
-                    dueDateYear = 0,
-                    dueDateHour = 0,
-                    dueDateMinute = 0,
-                    reminder1Day = null,
-                    reminder1Month = null,
-                    reminder1Year = null,
-                    reminder1Hour = null,
-                    reminder1Minute = null,
-                    reminder2Day = null,
-                    reminder2Month = null,
-                    reminder2Year = null,
-                    reminder2Hour = null,
-                    reminder2Minute = null,
-                    reminder3Day = null,
-                    reminder3Month = null,
-                    reminder3Year = null,
-                    reminder3Hour = null,
-                    reminder3Minute = null,
-                ) }
+                _state.update {
+                    it.copy(
+                        title = "",
+                        description = "",
+                        isDone = false,
+                        dueDateDay = 0,
+                        dueDateMonth = 0,
+                        dueDateYear = 0,
+                        dueDateHour = 0,
+                        dueDateMinute = 0,
+                        reminder1Day = null,
+                        reminder1Month = null,
+                        reminder1Year = null,
+                        reminder1Hour = null,
+                        reminder1Minute = null,
+                        reminder2Day = null,
+                        reminder2Month = null,
+                        reminder2Year = null,
+                        reminder2Hour = null,
+                        reminder2Minute = null,
+                        reminder3Day = null,
+                        reminder3Month = null,
+                        reminder3Year = null,
+                        reminder3Hour = null,
+                        reminder3Minute = null,
+                    )
+                }
             }
             is TaskEvent.SetDueDateDay -> _state.update {
                 it.copy( dueDateDay = event.dueDay )
@@ -212,6 +218,69 @@ class TaskViewModel(
             }
             is TaskEvent.SetReminder3Year -> _state.update {
                 it.copy( reminder3Year = event.r3Year )
+            }
+            is TaskEvent.EditTask -> {
+                viewModelScope.launch {
+                    val existingTask = dao.getTaskById(event.taskId)
+                    existingTask?.let {
+                        val updatedTask = it.copy(
+                            title = _state.value.title,
+                            description = _state.value.description,
+                            isDone = _state.value.isDone,
+                            dueDateDay = _state.value.dueDateDay,
+                            dueDateMonth = _state.value.dueDateMonth,
+                            dueDateYear = _state.value.dueDateYear,
+                            dueDateHour = _state.value.dueDateHour,
+                            dueDateMinute = _state.value.dueDateMinute,
+                            reminder1Day = _state.value.reminder1Day,
+                            reminder1Month = _state.value.reminder1Month,
+                            reminder1Year = _state.value.reminder1Year,
+                            reminder1Hour = _state.value.reminder1Hour,
+                            reminder1Minute = _state.value.reminder1Minute,
+                            reminder2Day = _state.value.reminder2Day,
+                            reminder2Month = _state.value.reminder2Month,
+                            reminder2Year = _state.value.reminder2Year,
+                            reminder2Hour = _state.value.reminder2Hour,
+                            reminder2Minute = _state.value.reminder2Minute,
+                            reminder3Day = _state.value.reminder3Day,
+                            reminder3Month = _state.value.reminder3Month,
+                            reminder3Year = _state.value.reminder3Year,
+                            reminder3Hour = _state.value.reminder3Hour,
+                            reminder3Minute = _state.value.reminder3Minute,
+                        )
+                        dao.upsertTask(updatedTask)
+                    }
+                    _state.update {
+                        it.copy(
+                            title = "",
+                            description = "",
+                            isDone = false,
+                            dueDateDay = 0,
+                            dueDateMonth = 0,
+                            dueDateYear = 0,
+                            dueDateHour = 0,
+                            dueDateMinute = 0,
+                            reminder1Day = null,
+                            reminder1Month = null,
+                            reminder1Year = null,
+                            reminder1Hour = null,
+                            reminder1Minute = null,
+                            reminder2Day = null,
+                            reminder2Month = null,
+                            reminder2Year = null,
+                            reminder2Hour = null,
+                            reminder2Minute = null,
+                            reminder3Day = null,
+                            reminder3Month = null,
+                            reminder3Year = null,
+                            reminder3Hour = null,
+                            reminder3Minute = null,
+                        )
+                    }
+                }
+            }
+            is TaskEvent.SetCompletionStatus -> _state.update {
+                it.copy(isDone = event.isDone)
             }
         }
     }
