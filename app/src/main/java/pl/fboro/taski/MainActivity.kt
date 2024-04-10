@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TaskiTheme {
                 val state by viewModel.state.collectAsState()
-                Navigation(state, viewModel::onEvent)
+                Navigation(state, viewModel::onEvent, applicationContext)
             }
         }
     }

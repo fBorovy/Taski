@@ -26,19 +26,26 @@ import pl.fboro.taski.feature_calendar.utils.currentDay
 import pl.fboro.taski.feature_calendar.utils.currentMonth
 import pl.fboro.taski.feature_calendar.utils.currentYear
 import pl.fboro.taski.feature_calendar.utils.getMonthDaysAmount
+import pl.fboro.taski.feature_reminder.data.AlarmItem
+import pl.fboro.taski.feature_reminder.data.AndroidAlarmScheduler
 import pl.fboro.taski.feature_task.data.TaskEvent
+import pl.fboro.taski.feature_task.utils.editTaskId
 import pl.fboro.taski.ui.theme.AddTaskButtonColor
 import pl.fboro.taski.ui.theme.AddTaskScreenLabelColor
 import pl.fboro.taski.ui.theme.BackgroundColor
 import pl.fboro.taski.ui.theme.Typography
+import java.time.LocalDateTime
 
 
 @Composable
 fun AddTaskScreen(
     navController: NavController,
+    applicationContext: Context,
     onEvent: (TaskEvent) -> Unit,
 ) {
     val context: Context = LocalContext.current
+    val scheduler = AndroidAlarmScheduler(applicationContext)
+
     var taskTitle by remember{ mutableStateOf("") }
     var taskDescription by remember{ mutableStateOf("") }
 
@@ -118,6 +125,58 @@ fun AddTaskScreen(
                         onEvent(TaskEvent.SetReminder3Hour(reminder3Hour))
                         onEvent(TaskEvent.SetReminder3Minute(reminder3Minute))
                     }
+
+                    if (showReminderDate1) {
+                        val alarmItem1 = AlarmItem(
+                            time = LocalDateTime.of(reminder1Year, reminder1Month, reminder1Day, reminder1Hour, reminder1Minute, 0),
+                            id = editTaskId * 10 + 2,
+                            title = taskTitle,
+                            dueDateDay = dueDateDay,
+                            dueDateMonth = dueDateMonth,
+                            dueDateHour = dueHour,
+                            dueDateMinute = dueMinute
+                        )
+                        alarmItem1.let(scheduler::schedule)
+                    }
+
+                    if (showReminderDate2) {
+                        val alarmItem2 = AlarmItem(
+                            time = LocalDateTime.of(reminder2Year, reminder2Month, reminder2Day, reminder2Hour, reminder2Minute, 0),
+                            id = editTaskId * 10 + 3,
+                            title = taskTitle,
+                            dueDateDay = dueDateDay,
+                            dueDateMonth = dueDateMonth,
+                            dueDateHour = dueHour,
+                            dueDateMinute = dueMinute
+                        )
+                        alarmItem2.let(scheduler::schedule)
+                    }
+
+                    if (showReminderDate3) {
+                        val alarmItem3 = AlarmItem(
+                            time = LocalDateTime.of(reminder3Year, reminder3Month, reminder3Day, reminder3Hour, reminder3Minute, 0),
+                            id = editTaskId * 10 + 4,
+                            title = taskTitle,
+                            dueDateDay = dueDateDay,
+                            dueDateMonth = dueDateMonth,
+                            dueDateHour = dueHour,
+                            dueDateMinute = dueMinute
+                        )
+                        alarmItem3.let(scheduler::schedule)
+                    }
+
+                    val alarmItem = AlarmItem(
+                        time = LocalDateTime.of(dueDateYear, dueDateMonth, dueDateDay, dueHour, dueMinute, 5),
+                        id = editTaskId * 10 + 1,
+                        title = taskTitle,
+                        dueDateDay = dueDateDay,
+                        dueDateMonth = dueDateMonth,
+                        dueDateHour = dueHour,
+                        dueDateMinute = dueMinute
+                    )
+                    alarmItem.let(scheduler::schedule)
+
+
                     onEvent(TaskEvent.SaveTask)
                     navController.popBackStack()
                 },
@@ -130,10 +189,7 @@ fun AddTaskScreen(
             )
         }
 
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 15.dp)
-        ) {
+        Column(modifier = Modifier.padding(start = 10.dp, end = 15.dp)) {
 
             TransparentTextField(
                 value = taskTitle,
@@ -161,7 +217,7 @@ fun AddTaskScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
@@ -170,7 +226,6 @@ fun AddTaskScreen(
                         value = dueDateDay,
                         range = 1..daysAmount,
                         textStyle = Typography.body2,
-
                         dividersColor = AddTaskScreenLabelColor,
                         onValueChange = {
                             dueDateDay = it
@@ -183,7 +238,6 @@ fun AddTaskScreen(
                         value = dueDateMonth,
                         range = 1..12,
                         textStyle = Typography.body2,
-
                         dividersColor = AddTaskScreenLabelColor,
                         onValueChange = {
                             dueDateMonth = it
@@ -197,7 +251,6 @@ fun AddTaskScreen(
                         value = dueDateYear,
                         range = currentYear..currentYear + 1,
                         textStyle = Typography.body2,
-
                         dividersColor = AddTaskScreenLabelColor,
                         onValueChange = {
                             dueDateYear = it
@@ -206,12 +259,13 @@ fun AddTaskScreen(
                     )
                 }
 
-                Row(verticalAlignment = Alignment.CenterVertically){
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ){
                     NumberPicker(
                         value = dueHour,
                         range = 0..23,
                         textStyle = Typography.body2,
-
                         dividersColor = AddTaskScreenLabelColor,
                         onValueChange = {
                             dueHour = it
@@ -228,7 +282,6 @@ fun AddTaskScreen(
                         value = dueMinute,
                         range = 0..59,
                         textStyle = Typography.body2,
-
                         dividersColor = AddTaskScreenLabelColor,
                         onValueChange = {
                             dueMinute = it
@@ -251,7 +304,7 @@ fun AddTaskScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
+                        .padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
@@ -341,7 +394,7 @@ fun AddTaskScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 20.dp),
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
@@ -431,7 +484,7 @@ fun AddTaskScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp),
+                                .padding(horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {

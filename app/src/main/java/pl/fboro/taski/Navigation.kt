@@ -1,5 +1,6 @@
 package pl.fboro.taski
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +14,7 @@ import pl.fboro.taski.feature_task.presentation.components.EditTaskScreen
 fun Navigation(
     state: TaskState,
     onEvent: (TaskEvent) -> Unit,
+    applicationContext: Context
 ) {
     val navController = rememberNavController()
 
@@ -25,12 +27,12 @@ fun Navigation(
         composable(
             route = Screen.AddTaskScreen.route
         ) {
-            AddTaskScreen(navController, onEvent)
+            AddTaskScreen(navController, applicationContext, onEvent)
         }
         composable(
             route = Screen.EditTaskScreen.route
         ) {
-            EditTaskScreen(navController, onEvent)
+            EditTaskScreen(navController, applicationContext, onEvent)
         }
     }
 

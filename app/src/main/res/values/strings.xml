@@ -36,4 +36,6 @@
     <string name="description_placeholder">Opis</string>
     <string name="deadline">Termin</string>
     <string name="addReminder">Dodaj przypomnienie</string>
+    <string name="notificationLabel">Termin wykonania zadania</string>
+    <string name="change_task_showing_option_image">Zmień opcje wyświetlania zadań</string>
 </resources>

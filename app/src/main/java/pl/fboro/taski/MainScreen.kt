@@ -23,9 +23,8 @@ import pl.fboro.taski.ui.theme.BackgroundColor
 fun MainScreen(
     navController: NavController,
     state: TaskState,
-    onEvent: (TaskEvent) -> Unit
+    onEvent: (TaskEvent) -> Unit,
 ) {
-
     Box(
         modifier = Modifier
             .fillMaxSize()

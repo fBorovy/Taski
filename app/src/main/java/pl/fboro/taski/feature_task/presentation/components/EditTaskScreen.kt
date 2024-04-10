@@ -27,16 +27,22 @@ import pl.fboro.taski.feature_calendar.utils.currentDay
 import pl.fboro.taski.feature_calendar.utils.currentMonth
 import pl.fboro.taski.feature_calendar.utils.currentYear
 import pl.fboro.taski.feature_calendar.utils.getMonthDaysAmount
+import pl.fboro.taski.feature_reminder.data.AlarmItem
+import pl.fboro.taski.feature_reminder.data.AndroidAlarmScheduler
 import pl.fboro.taski.feature_task.data.TaskEvent
 import pl.fboro.taski.feature_task.utils.*
 import pl.fboro.taski.ui.theme.*
+import java.time.LocalDateTime
 
 @Composable
 fun EditTaskScreen(
     navController: NavController,
+    applicationContext: Context,
     onEvent: (TaskEvent) -> Unit,
 ) {
     val context: Context = LocalContext.current
+    val scheduler = AndroidAlarmScheduler(applicationContext)
+
     var isDone by remember { mutableStateOf(editIsDone) }
     var taskTitle by remember{ mutableStateOf(editTitle) }
     var taskDescription by remember{ mutableStateOf(editDescription) }
@@ -88,6 +94,10 @@ fun EditTaskScreen(
                 .align(Alignment.CenterEnd)
                 .padding(11.dp)
                 .clickable {
+
+                    //DO ZROBIENIA: ON BOOT, ANULOWANIE ALARMOW ALBO MODYFIKACJA BEZPOSREDNIO
+
+
                     onEvent(TaskEvent.SetTitle(taskTitle))
                     onEvent(TaskEvent.SetDescription(taskDescription))
                     onEvent(TaskEvent.SetDueDateDay(dueDateDay))
@@ -118,6 +128,57 @@ fun EditTaskScreen(
                         onEvent(TaskEvent.SetReminder3Minute(reminder3Minute))
                     }
                     onEvent(TaskEvent.EditTask(editTaskId))
+
+                    if (showReminderDate1) {
+                        val alarmItem1 = AlarmItem(
+                            time = LocalDateTime.of(reminder1Year, reminder1Month, reminder1Day, reminder1Hour, reminder1Minute, 0),
+                            id = editTaskId * 10 + 2,
+                            title = taskTitle,
+                            dueDateDay = dueDateDay,
+                            dueDateMonth = dueDateMonth,
+                            dueDateHour = dueHour,
+                            dueDateMinute = dueMinute
+                        )
+                        alarmItem1.let(scheduler::schedule)
+                    }
+
+                    if (showReminderDate2) {
+                        val alarmItem2 = AlarmItem(
+                            time = LocalDateTime.of(reminder2Year, reminder2Month, reminder2Day, reminder2Hour, reminder2Minute, 0),
+                            id = editTaskId * 10 + 3,
+                            title = taskTitle,
+                            dueDateDay = dueDateDay,
+                            dueDateMonth = dueDateMonth,
+                            dueDateHour = dueHour,
+                            dueDateMinute = dueMinute
+                        )
+                        alarmItem2.let(scheduler::schedule)
+                    }
+
+                    if (showReminderDate3) {
+                        val alarmItem3 = AlarmItem(
+                            time = LocalDateTime.of(reminder3Year, reminder3Month, reminder3Day, reminder3Hour, reminder3Minute, 0),
+                            id = editTaskId * 10 + 4,
+                            title = taskTitle,
+                            dueDateDay = dueDateDay,
+                            dueDateMonth = dueDateMonth,
+                            dueDateHour = dueHour,
+                            dueDateMinute = dueMinute
+                        )
+                        alarmItem3.let(scheduler::schedule)
+                    }
+
+                    val alarmItem = AlarmItem(
+                        time = LocalDateTime.of(dueDateYear, dueDateMonth, dueDateDay, dueHour, dueMinute, 5),
+                        id = editTaskId * 10 + 1,
+                        title = taskTitle,
+                        dueDateDay = dueDateDay,
+                        dueDateMonth = dueDateMonth,
+                        dueDateHour = dueHour,
+                        dueDateMinute = dueMinute
+                    )
+                    alarmItem.let(scheduler::schedule)
+
                     navController.popBackStack()
                 },
         ) {
@@ -149,7 +210,8 @@ fun EditTaskScreen(
             )
         }
 
-        Column {
+        Column(modifier = Modifier.padding(start = 10.dp, end = 15.dp)) {
+
             TransparentTextField(value = taskTitle,
                 placeholder = taskTitle,
                 singleLine = true,
@@ -173,7 +235,7 @@ fun EditTaskScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
@@ -182,7 +244,6 @@ fun EditTaskScreen(
                         value = dueDateDay,
                         range = 1..daysAmount,
                         textStyle = Typography.body2,
-
                         dividersColor = AddTaskScreenLabelColor,
                         onValueChange = {
                             dueDateDay = it
@@ -263,7 +324,7 @@ fun EditTaskScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
+                        .padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
@@ -353,7 +414,7 @@ fun EditTaskScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 20.dp),
+                            .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
@@ -443,7 +504,7 @@ fun EditTaskScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp),
+                                .padding(horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
